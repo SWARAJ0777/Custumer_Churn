@@ -1,116 +1,93 @@
-# ChurnGuard — Customer Churn Prediction (Portfolio Project)
+# ChurnGuard — Streamlit Edition
 
-A fully responsive, production-styled front-end for a customer churn
-prediction platform. Built with plain HTML5, CSS3, and vanilla ES6+
-JavaScript — no build step, no frameworks, no dependencies to install.
-
-## ✨ Features
-
-- **Hero dashboard** with animated SVG risk gauge and floating insight cards
-- **Live KPI metrics** (accuracy, revenue saved, at-risk customers, etc.)
-- **Interactive analytics charts** (Chart.js): churn trend line chart with
-  monthly/quarterly toggle, risk distribution doughnut, SHAP feature
-  importance bar chart
-- **Live churn predictor** — fill in a customer profile and get an instant
-  heuristic risk score, contributing factors, and recommended retention
-  actions
-- **Customer risk segments** with animated progress bars (IntersectionObserver)
-- **Model insight cards** explaining key churn drivers
-- **Interactive ML pipeline walkthrough** with syntax-highlighted code
-  snippets for each stage (ingestion → feature engineering → training →
-  evaluation → deployment)
-- **Searchable / filterable customer table**
-- **Tech stack showcase** and contact/CTA section
-- Fully responsive (desktop, tablet, mobile) with a mobile hamburger nav
-- Scroll-spy navigation, smooth scrolling, reduced-motion support
+A Streamlit recreation of the ChurnGuard customer churn prediction
+dashboard: live heuristic scoring, Plotly analytics charts, customer
+segmentation, an interactive ML pipeline walkthrough, and a searchable
+customer risk table — all in a single `streamlit_app.py`, styled with a
+dark theme to match the original web design.
 
 ## 📁 Project Structure
 
 ```
-churnguard/
-├── index.html              # Main HTML document (all sections/markup)
-├── README.md                # This file
-├── css/
-│   └── style.css            # All styling: variables, layout, components,
-│                             # animations, responsive breakpoints
-└── js/
-    ├── data.js               # Static sample dataset (customers, chart data)
-    ├── charts.js              # Chart.js setup (line / doughnut / bar charts)
-    ├── predictor.js           # Live churn prediction scoring engine
-    ├── pipeline.js             # Pipeline step switcher + code snippets
-    ├── table.js                # Customer table render/search/filter
-    └── main.js                  # App bootstrap: nav, scroll-spy, init calls
+churnguard_streamlit/
+├── streamlit_app.py          # Main app (entry point)
+├── requirements.txt           # Python dependencies
+├── .gitignore
+├── README.md
+└── .streamlit/
+    └── config.toml             # Dark theme + server config
 ```
 
-## 🚀 Running Locally
+## 🚀 Run Locally
 
-No build tools or installation required.
+```bash
+# 1. Create and activate a virtual environment (recommended)
+python3 -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
 
-1. Download/clone the `churnguard` folder.
-2. Open `index.html` directly in any modern browser, **or** serve it with
-   a simple local server (recommended, avoids any `file://` CORS quirks):
+# 2. Install dependencies
+pip install -r requirements.txt
 
-   ```bash
-   # Python 3
-   cd churnguard
-   python3 -m http.server 8000
-   # then visit http://localhost:8000
-   ```
+# 3. Run the app
+streamlit run streamlit_app.py
+```
 
-   ```bash
-   # Node (npx, no install)
-   npx serve churnguard
-   ```
+The app opens automatically at **http://localhost:8501**.
 
-That's it — the app is 100% static and runs entirely client-side.
+## ☁️ Deploy to Streamlit Community Cloud
 
-## 🌐 External Dependencies (via CDN)
+1. Push this folder to a **public GitHub repository** (the repo root
+   should contain `streamlit_app.py`, `requirements.txt`, and the
+   `.streamlit/` folder — see structure above).
+2. Go to **[share.streamlit.io](https://share.streamlit.io)** and sign
+   in with GitHub.
+3. Click **"Create app"** → **"Yup, I have an app"**.
+4. Fill in:
+   - **Repository:** `<your-username>/<your-repo>`
+   - **Branch:** `main`
+   - **Main file path:** `streamlit_app.py`
+   - **App URL (optional):** choose a custom subdomain, e.g. `churnguard`
+5. Click **Deploy**. Streamlit installs `requirements.txt` automatically
+   and the app goes live at `https://<your-subdomain>.streamlit.app`.
 
-These are loaded directly in `index.html` — no npm install needed:
+No environment variables or secrets are required — this app has no
+external API calls or credentials.
 
-| Library | Purpose | Source |
-|---|---|---|
-| Google Fonts — Inter & JetBrains Mono | Typography | fonts.googleapis.com |
-| Tabler Icons (webfont) | UI icons | cdn.jsdelivr.net |
-| Chart.js 4.4.1 | Analytics charts | cdnjs.cloudflare.com |
+## 🔄 Updating the Deployed App
 
-If you need a fully offline build, download these three assets locally and
-update the `<link>`/`<script>` paths in `index.html` accordingly.
+Any `git push` to the connected branch triggers an automatic redeploy.
+If you only changed `requirements.txt`, you may need to manually
+**"Reboot app"** from the app's menu (⋮) on share.streamlit.io to force
+a fresh dependency install.
 
-## 🎨 Customization Guide
+## 🎨 Customization
 
-- **Colors / theme** — all design tokens live at the top of `css/style.css`
-  inside `:root { ... }`. Change `--accent`, `--bg`, gradients, etc. to
-  re-theme the whole site instantly.
-- **Customer data** — edit the `CUSTOMERS` array in `js/data.js` to swap in
-  your own sample records (or wire it up to a real API).
-- **Chart data** — `CHURN_TRENDS`, `RISK_DISTRIBUTION`, and
-  `FEATURE_IMPORTANCE` in `js/data.js` feed the three analytics charts.
-- **Prediction logic** — `js/predictor.js` contains a transparent, fully
-  commented heuristic scoring function (`computeChurnScore`). Replace this
-  with a real `fetch()` call to your backend / ML API for a production
-  deployment (e.g. a FastAPI endpoint as shown in the Pipeline section's
-  code sample).
-- **Pipeline code snippets** — edit `PIPELINE_CONTENT` in `js/pipeline.js`
-  to update the syntax-highlighted code shown for each ML pipeline stage.
+- **Theme colors** — edit `.streamlit/config.toml` (`primaryColor`,
+  `backgroundColor`, etc.) or the `COLORS` dict at the top of
+  `streamlit_app.py` (used for inline HTML/CSS styling).
+- **Customer data** — edit `load_customers()` in `streamlit_app.py`.
+- **Chart data** — edit `CHURN_TRENDS`, `RISK_DISTRIBUTION`,
+  `FEATURE_IMPORTANCE` near the top of the file.
+- **Prediction logic** — `compute_churn_score()` is a transparent,
+  commented heuristic. Swap it for a real model by loading a pickled
+  scikit-learn/XGBoost model with `joblib` and calling
+  `model.predict_proba(...)` instead.
 
-## ♿ Accessibility
+## ⚠️ Note on Predictions
 
-- Semantic landmarks (`nav`, `section`, `footer`) and heading hierarchy
-- ARIA labels/roles on charts, progress bars, gauges, and live regions
-- Visible focus states (`:focus-visible`) on all interactive elements
-- `prefers-reduced-motion` support disables animations for users who
-  request it
+Like the original web version, the churn score here is generated by a
+transparent **rule-based heuristic** (see `compute_churn_score` in
+`streamlit_app.py`), not a trained ML model — this keeps the project
+fully self-contained with zero external dependencies or model files.
+The code is structured so swapping in a real trained model is a
+drop-in change.
 
-## 📱 Responsive Breakpoints
+## 🧯 Troubleshooting
 
-| Breakpoint | Behavior |
+| Issue | Fix |
 |---|---|
-| `> 1024px` | Full multi-column desktop layout |
-| `≤ 1024px` | Metrics/tech grids collapse to 2 columns, charts stack |
-| `≤ 900px`  | Hero/predictor/pipeline collapse to 1 column, mobile nav appears |
-| `≤ 640px`  | Single-column forms/grids, compact spacing, stacked footer |
-
-## 📄 License
-
-Free to use and modify for personal portfolio purposes.
+| `ModuleNotFoundError: plotly` | Run `pip install -r requirements.txt` again, confirm your venv is activated |
+| Blank/white page on Streamlit Cloud | Check the app logs (bottom-right "Manage app" panel) for the actual Python traceback |
+| Theme looks wrong / light mode | Confirm `.streamlit/config.toml` was committed and pushed — Cloud reads it from the repo |
+| "Main file path" error during deploy | Path must be exactly `streamlit_app.py` (case-sensitive), matching the file at the repo root |
+| App works locally but fails on Cloud | Almost always a missing/mismatched package version in `requirements.txt` — check the deploy logs |
