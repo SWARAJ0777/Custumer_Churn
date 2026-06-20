@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ChurnGuard — ML-powered customer churn prediction platform with 94.2% accuracy." />
+  <title>ChurnGuard — Customer Churn Prediction</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+
+  <!-- Tabler Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" />
+
+  <!-- Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+  <!-- Project CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- =========================================================
+       AMBIENT BACKGROUND GLOW
+  ========================================================== -->
+  <div class="hero-bg" aria-hidden="true"></div>
+
+  <!-- =========================================================
+       NAVIGATION
+  ========================================================== -->
+  <nav id="main-nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <!-- Logo -->
+      <a href="#overview" class="nav-logo" aria-label="ChurnGuard Home">
+        <div class="logo-dot" aria-hidden="true">
+          <i class="ti ti-activity"></i>
+        </div>
+        ChurnGuard
+      </a>
+
+      <!-- Hamburger (mobile) -->
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+        <i class="ti ti-menu-2"></i>
+      </button>
+
+      <!-- Links -->
+      <ul class="nav-links" id="nav-links" role="list">
+        <li><a href="#overview"   class="nav-link active">Overview</a></li>
+        <li><a href="#predictor"  class="nav-link">Predict</a></li>
+        <li><a href="#analytics"  class="nav-link">Analytics</a></li>
+        <li><a href="#segments"   class="nav-link">Segments</a></li>
+        <li><a href="#pipeline"   class="nav-link">Pipeline</a></li>
+        <li><a href="#customers"  class="nav-link">Customers</a></li>
+      </ul>
+
+      <button class="nav-cta" onclick="smoothTo('predictor')" aria-label="Try the live prediction demo">
+        <span>Try Demo</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- =========================================================
+       HERO SECTION
+  ========================================================== -->
+  <section id="overview" class="hero-section" aria-labelledby="hero-heading">
+    <div class="hero-content">
+      <!-- Left column -->
+      <div class="hero-left">
+        <div class="hero-badge" role="status">
+          <span class="badge-dot" aria-hidden="true"></span>
+          ML-Powered Prediction System
+        </div>
+
+        <h1 id="hero-heading" class="hero-title">
+          Stop Churn<br />
+          <span class="gradient-text">Before It Starts</span>
+        </h1>
+
+        <p class="hero-sub">
+          An end-to-end machine learning platform that identifies at-risk customers
+          with 94.2% accuracy — giving your team time to act before revenue walks
+          out the door.
+        </p>
+
+        <div class="hero-btns">
+          <button class="btn btn-primary" onclick="smoothTo('predictor')">
+            <i class="ti ti-brain" aria-hidden="true"></i> Run a Prediction
+          </button>
+          <button class="btn btn-secondary" onclick="smoothTo('analytics')">
+            View Analytics <i class="ti ti-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <div class="hero-stats" role="list" aria-label="Key statistics">
+          <div class="hero-stat" role="listitem">
+            <div class="hero-stat-num">94.2% <span class="stat-badge">↑ accuracy</span></div>
+            <div class="hero-stat-label">Model Precision</div>
+          </div>
+          <div class="hero-stat" role="listitem">
+            <div class="hero-stat-num">$2.4M <span class="stat-badge">↑ saved</span></div>
+            <div class="hero-stat-label">Revenue Retained</div>
+          </div>
+          <div class="hero-stat" role="listitem">
+            <div class="hero-stat-num">18K <span class="stat-badge">customers</span></div>
+            <div class="hero-stat-label">Profiles Analyzed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right column — Risk card -->
+      <div class="hero-right" aria-label="Sample customer risk card">
+        <div class="hero-card card">
+          <div class="hero-card-header">
+            <span class="card-label">Customer Risk Score</span>
+            <span class="risk-badge risk-high">High Risk</span>
+          </div>
+
+          <!-- SVG Gauge -->
+          <div class="gauge-wrap">
+            <svg width="200" height="115" viewBox="0 0 200 115"
+                 role="img" aria-label="Churn risk gauge showing 78%">
+              <title>Churn risk: 78%</title>
+              <defs>
+                <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%"   stop-color="#22c55e" />
+                  <stop offset="50%"  stop-color="#f59e0b" />
+                  <stop offset="100%" stop-color="#ef4444" />
+                </linearGradient>
+              </defs>
+              <!-- Track -->
+              <path d="M 20 100 A 80 80 0 0 1 180 100"
+                    fill="none" stroke="#1a2236" stroke-width="16" stroke-linecap="round" />
+              <!-- Fill (~78% of 180° arc) -->
+              <path d="M 20 100 A 80 80 0 0 1 180 100"
+                    fill="none" stroke="url(#gaugeGrad)" stroke-width="16"
+                    stroke-linecap="round" stroke-dasharray="251" stroke-dashoffset="55" />
+              <text x="100" y="92"  text-anchor="middle" font-size="28"
+                    font-weight="700" fill="#e8edf8">78%</text>
+              <text x="100" y="110" text-anchor="middle" font-size="11"
+                    fill="#94a3c4">Churn Probability</text>
+            </svg>
+          </div>
+
+          <!-- Mini factor bars -->
+          <ul class="mini-bars" role="list" aria-label="Risk factor scores">
+            <li class="mini-bar-row">
+              <span class="mini-bar-label">Contract Type</span>
+              <div class="mini-bar-track" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">
+                <div class="mini-bar-fill" style="width:85%;background:#ef4444;"></div>
+              </div>
+              <span class="mini-bar-val">0.85</span>
+            </li>
+            <li class="mini-bar-row">
+              <span class="mini-bar-label">Monthly Charges</span>
+              <div class="mini-bar-track" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100">
+                <div class="mini-bar-fill" style="width:72%;background:#f59e0b;"></div>
+              </div>
+              <span class="mini-bar-val">0.72</span>
+            </li>
+            <li class="mini-bar-row">
+              <span class="mini-bar-label">Tenure</span>
+              <div class="mini-bar-track" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+                <div class="mini-bar-fill" style="width:60%;background:#f59e0b;"></div>
+              </div>
+              <span class="mini-bar-val">0.60</span>
+            </li>
+            <li class="mini-bar-row">
+              <span class="mini-bar-label">Support Tickets</span>
+              <div class="mini-bar-track" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100">
+                <div class="mini-bar-fill" style="width:45%;background:#4f8ef7;"></div>
+              </div>
+              <span class="mini-bar-val">0.45</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Floating chips -->
+        <div class="floating-card fc1" aria-hidden="true">
+          <div class="fc-label">Recommended Action</div>
+          <div class="fc-value success">
+            <i class="ti ti-gift"></i> Offer retention discount
+          </div>
+        </div>
+        <div class="floating-card fc2" aria-hidden="true">
+          <div class="fc-label">Model Confidence</div>
+          <div class="fc-value accent">96.3%</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- =========================================================
+       METRICS / ANALYTICS
+  ========================================================== -->
+  <section id="analytics" class="section" aria-labelledby="analytics-heading">
+    <p class="section-eyebrow">Performance Overview</p>
+    <h2 id="analytics-heading" class="section-title">Dashboard Metrics</h2>
+    <p class="section-sub">
+      Real-time monitoring of churn trends, model accuracy, and business impact
+      across your customer base.
+    </p>
+
+    <!-- KPI cards -->
+    <div class="metrics-grid" role="list" aria-label="Key performance indicators">
+      <article class="metric-card blue" role="listitem">
+        <div class="metric-icon blue-icon" aria-hidden="true">
+          <i class="ti ti-users"></i>
+        </div>
+        <div class="metric-num">18,420</div>
+        <div class="metric-label">Total Customers</div>
+        <div class="metric-trend trend-up">
+          <i class="ti ti-trending-up" aria-hidden="true"></i> +3.2% this month
+        </div>
+      </article>
+      <article class="metric-card green" role="listitem">
+        <div class="metric-icon green-icon" aria-hidden="true">
+          <i class="ti ti-shield-check"></i>
+        </div>
+        <div class="metric-num">94.2%</div>
+        <div class="metric-label">Prediction Accuracy</div>
+        <div class="metric-trend trend-up">
+          <i class="ti ti-trending-up" aria-hidden="true"></i> +1.8% vs last quarter
+        </div>
+      </article>
+      <article class="metric-card amber" role="listitem">
+        <div class="metric-icon amber-icon" aria-hidden="true">
+          <i class="ti ti-alert-triangle"></i>
+        </div>
+        <div class="metric-num">2,134</div>
+        <div class="metric-label">At-Risk Customers</div>
+        <div class="metric-trend trend-down">
+          <i class="ti ti-trending-down" aria-hidden="true"></i> -12.4% from last month
+        </div>
+      </article>
+      <article class="metric-card purple" role="listitem">
+        <div class="metric-icon purple-icon" aria-hidden="true">
+          <i class="ti ti-currency-dollar"></i>
+        </div>
+        <div class="metric-num">$2.4M</div>
+        <div class="metric-label">Revenue Saved</div>
+        <div class="metric-trend trend-up">
+          <i class="ti ti-trending-up" aria-hidden="true"></i> +28.6% YoY
+        </div>
+      </article>
+    </div>
+
+    <!-- Charts row -->
+    <div class="charts-grid">
+      <!-- Line chart -->
+      <div class="chart-card card">
+        <div class="chart-header">
+          <span class="chart-title">Churn Rate Over Time</span>
+          <div class="chart-tabs" role="tablist" aria-label="Time period">
+            <button class="chart-tab active" role="tab" aria-selected="true"
+                    onclick="switchChart(this,'monthly')">Monthly</button>
+            <button class="chart-tab" role="tab" aria-selected="false"
+                    onclick="switchChart(this,'quarterly')">Quarterly</button>
+          </div>
+        </div>
+        <div class="chart-canvas-wrap" style="height:220px;">
+          <canvas id="churnChart"
+                  role="img"
+                  aria-label="Monthly churn rate declined from 8.2% in January to 5.1% in December">
+            Churn rate data: declined from 8.2% in January to 5.1% in December.
+          </canvas>
+        </div>
+        <div class="chart-legend" aria-label="Chart legend">
+          <div class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span>Churn Rate</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#4f8ef7;"></span>Predicted</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#22c55e;"></span>Retention</div>
+        </div>
+      </div>
+
+      <!-- Doughnut chart -->
+      <div class="chart-card card">
+        <div class="chart-header">
+          <span class="chart-title">Risk Distribution</span>
+        </div>
+        <div class="chart-canvas-wrap" style="height:200px;">
+          <canvas id="riskChart"
+                  role="img"
+                  aria-label="Donut chart: Low risk 68%, Medium 20%, High 12%">
+            Risk distribution: Low 68%, Medium 20%, High 12%.
+          </canvas>
+        </div>
+        <ul class="risk-legend" aria-label="Risk distribution breakdown">
+          <li><span class="legend-sq" style="background:#22c55e;"></span>Low Risk <strong>68% · 12,525</strong></li>
+          <li><span class="legend-sq" style="background:#f59e0b;"></span>Medium Risk <strong>20% · 3,684</strong></li>
+          <li><span class="legend-sq" style="background:#ef4444;"></span>High Risk <strong>12% · 2,210</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Feature importance -->
+    <div class="chart-card card" style="margin-top:24px;">
+      <div class="chart-header">
+        <span class="chart-title">Feature Importance (SHAP Values)</span>
+        <span class="chart-subtitle">Top 8 predictive features</span>
+      </div>
+      <div class="chart-canvas-wrap" style="height:300px;">
+        <canvas id="featureChart"
+                role="img"
+                aria-label="Horizontal bar chart: Contract Type highest at 0.42, Monthly Charges 0.38">
+          Feature importance: Contract Type 0.42, Monthly Charges 0.38, Tenure 0.31.
+        </canvas>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- =========================================================
+       LIVE PREDICTOR
+  ========================================================== -->
+  <section id="predictor" class="section" aria-labelledby="predictor-heading">
+    <p class="section-eyebrow">Live Demo</p>
+    <h2 id="predictor-heading" class="section-title">Predict Customer Churn</h2>
+    <p class="section-sub">
+      Enter customer attributes below to get an instant churn probability score
+      with key risk factors and recommended actions.
+    </p>
+
+    <div class="predictor-wrap">
+      <!-- Input form -->
+      <div class="predictor-form card" role="form" aria-label="Customer profile input">
+        <h3 class="form-title">
+          <i class="ti ti-user-circle" aria-hidden="true"></i> Customer Profile
+        </h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="f_tenure">Tenure (months)</label>
+            <input type="number" id="f_tenure" value="12" min="0" max="72"
+                   aria-describedby="tenure-hint" />
+            <span id="tenure-hint" class="sr-only">Enter number of months customer has been subscribed</span>
+          </div>
+          <div class="form-group">
+            <label for="f_charges">Monthly Charges ($)</label>
+            <input type="number" id="f_charges" value="85" min="0" />
+          </div>
+          <div class="form-group">
+            <label for="f_contract">Contract Type</label>
+            <select id="f_contract">
+              <option value="month">Month-to-Month</option>
+              <option value="year">One Year</option>
+              <option value="two">Two Year</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f_internet">Internet Service</label>
+            <select id="f_internet">
+              <option>Fiber Optic</option>
+              <option>DSL</option>
+              <option>No Internet</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f_payment">Payment Method</label>
+            <select id="f_payment">
+              <option>Electronic Check</option>
+              <option>Mailed Check</option>
+              <option>Auto Bank Transfer</option>
+              <option>Credit Card</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f_tickets">Support Tickets</label>
+            <input type="number" id="f_tickets" value="3" min="0" />
+          </div>
+          <div class="form-group form-full">
+            <label for="f_techsupport">Tech Support Subscription</label>
+            <select id="f_techsupport">
+              <option>No</option>
+              <option>Yes</option>
+            </select>
+          </div>
+          <div class="form-group form-full">
+            <label for="f_sat">
+              Satisfaction Score:
+              <span id="sat_val" class="range-val">3</span>/5
+            </label>
+            <input type="range" id="f_sat" min="1" max="5" value="3" step="1"
+                   aria-valuemin="1" aria-valuemax="5" aria-valuenow="3"
+                   oninput="updateSat(this.value)" />
+            <div class="range-labels" aria-hidden="true">
+              <span>Very Unhappy</span><span>Neutral</span><span>Very Happy</span>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-predict" id="predict-btn" onclick="runPrediction()">
+          <i class="ti ti-brain" aria-hidden="true"></i> Predict Churn Probability
+        </button>
+      </div>
+
+      <!-- Result panel -->
+      <div class="predictor-result card" id="result-panel" aria-live="polite" aria-atomic="true">
+        <!-- Placeholder -->
+        <div class="result-placeholder" id="result_placeholder">
+          <i class="ti ti-chart-bubble" aria-hidden="true"></i>
+          <p class="placeholder-title">Awaiting Input</p>
+          <p class="placeholder-sub">
+            Fill in the customer profile and click Predict to see the churn
+            probability score and risk factors.
+          </p>
+        </div>
+
+        <!-- Result content (shown after prediction) -->
+        <div class="result-content" id="result_content" hidden>
+          <p class="result-section-label">Prediction Result</p>
+
+          <div class="churn-gauge">
+            <div class="gauge-pct" id="r_pct">—</div>
+            <div class="gauge-label">Churn Probability</div>
+            <div class="gauge-badge-wrap">
+              <span class="risk-badge" id="r_badge">—</span>
+            </div>
+          </div>
+
+          <!-- Risk level bar -->
+          <div class="risk-level-bar" aria-label="Risk indicator bar">
+            <div class="risk-indicator" id="r_indicator" style="left:50%;"></div>
+          </div>
+          <div class="risk-bar-labels" aria-hidden="true">
+            <span>Low</span><span>Medium</span><span>High</span>
+          </div>
+
+          <!-- Key factors -->
+          <p class="result-section-label">Key Risk Factors</p>
+          <ul class="factor-list" id="r_factors" aria-label="Risk factors"></ul>
+
+          <!-- Recommendations -->
+          <p class="result-section-label">Recommended Actions</p>
+          <div class="action-pills" id="r_actions" aria-label="Recommended actions"></div>
+
+          <!-- Footer note -->
+          <div class="result-note">
+            <i class="ti ti-info-circle" aria-hidden="true"></i>
+            Predictions generated by XGBoost ensemble model (v2.1) trained on 50K+
+            customer records. Confidence:
+            <span id="r_confidence" class="accent-text">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- =========================================================
+       CUSTOMER SEGMENTS
+  ========================================================== -->
+  <section id="segments" class="section" aria-labelledby="segments-heading">
+    <p class="section-eyebrow">Customer Segmentation</p>
+    <h2 id="segments-heading" class="section-title">Risk Segments</h2>
+    <p class="section-sub">
+      Customers automatically grouped by churn likelihood using K-Means clustering
+      and behavioural signals.
+    </p>
+
+    <div class="segments-grid">
+      <article class="segment-card card" tabindex="0">
+        <div class="segment-icon green-icon" aria-hidden="true">
+          <i class="ti ti-shield"></i>
+        </div>
+        <h3 class="segment-title">Loyal Champions</h3>
+        <div class="segment-count" style="color:var(--green);">12,525</div>
+        <p class="segment-desc">
+          Long-tenure customers with strong engagement, auto-pay, and tech support.
+          Churn risk under 15%.
+        </p>
+        <div class="segment-progress">
+          <div class="seg-prog-label">
+            <span>Avg Churn Risk</span>
+            <span style="color:var(--green);">8.4%</span>
+          </div>
+          <div class="seg-prog-track">
+            <div class="seg-prog-fill" data-width="8" style="background:var(--green);"></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="segment-card card" tabindex="0">
+        <div class="segment-icon amber-icon" aria-hidden="true">
+          <i class="ti ti-alert-circle"></i>
+        </div>
+        <h3 class="segment-title">At-Risk Fence Sitters</h3>
+        <div class="segment-count" style="color:var(--amber);">3,684</div>
+        <p class="segment-desc">
+          Month-to-month customers with rising charges and occasional complaints.
+          Need proactive outreach.
+        </p>
+        <div class="segment-progress">
+          <div class="seg-prog-label">
+            <span>Avg Churn Risk</span>
+            <span style="color:var(--amber);">47.2%</span>
+          </div>
+          <div class="seg-prog-track">
+            <div class="seg-prog-fill" data-width="47" style="background:var(--amber);"></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="segment-card card" tabindex="0">
+        <div class="segment-icon red-icon" aria-hidden="true">
+          <i class="ti ti-flame"></i>
+        </div>
+        <h3 class="segment-title">Critical Churners</h3>
+        <div class="segment-count" style="color:var(--red);">2,211</div>
+        <p class="segment-desc">
+          High charges, multiple tickets, no long-term contract.
+          Immediate intervention required to retain.
+        </p>
+        <div class="segment-progress">
+          <div class="seg-prog-label">
+            <span>Avg Churn Risk</span>
+            <span style="color:var(--red);">82.6%</span>
+          </div>
+          <div class="seg-prog-track">
+            <div class="seg-prog-fill" data-width="83" style="background:var(--red);"></div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- =========================================================
+       INSIGHTS
+  ========================================================== -->
+  <section class="section" aria-labelledby="insights-heading">
+    <p class="section-eyebrow">Model Insights</p>
+    <h2 id="insights-heading" class="section-title">What Drives Churn?</h2>
+    <p class="section-sub">
+      SHAP analysis and exploratory data analysis reveal the most impactful
+      signals in customer behaviour.
+    </p>
+
+    <div class="insights-grid">
+      <article class="insight-card card">
+        <div class="insight-header">
+          <div class="insight-icon red-icon" aria-hidden="true">
+            <i class="ti ti-file-invoice"></i>
+          </div>
+          <div>
+            <h3 class="insight-title">Contract Type is the #1 Predictor</h3>
+            <p class="insight-desc">
+              Month-to-month customers are 3.4× more likely to churn than customers
+              on annual or bi-annual contracts. Nudging at-risk customers toward
+              longer contracts reduces churn significantly.
+            </p>
+          </div>
+        </div>
+        <div class="insight-stat">
+          <span class="insight-stat-num" style="color:var(--red);">3.4×</span>
+          <span class="insight-stat-label">higher churn rate for month-to-month vs annual</span>
+        </div>
+      </article>
+
+      <article class="insight-card card">
+        <div class="insight-header">
+          <div class="insight-icon amber-icon" aria-hidden="true">
+            <i class="ti ti-currency-dollar"></i>
+          </div>
+          <div>
+            <h3 class="insight-title">High Charges Without Perceived Value</h3>
+            <p class="insight-desc">
+              Customers paying over $80/month who don't use Tech Support or Online
+              Backup are 2.1× more likely to leave. Perceived value gap triggers
+              churn faster than price alone.
+            </p>
+          </div>
+        </div>
+        <div class="insight-stat">
+          <span class="insight-stat-num" style="color:var(--amber);">2.1×</span>
+          <span class="insight-stat-label">higher risk when charges exceed value perception</span>
+        </div>
+      </article>
+
+      <article class="insight-card card">
+        <div class="insight-header">
+          <div class="insight-icon blue-icon" aria-hidden="true">
+            <i class="ti ti-clock"></i>
+          </div>
+          <div>
+            <h3 class="insight-title">The Critical First 12 Months</h3>
+            <p class="insight-desc">
+              60% of churners leave within their first year. The onboarding experience
+              and early value delivery are the most important retention levers
+              available to the business.
+            </p>
+          </div>
+        </div>
+        <div class="insight-stat">
+          <span class="insight-stat-num" style="color:var(--accent);">60%</span>
+          <span class="insight-stat-label">of churners leave within year one</span>
+        </div>
+      </article>
+
+      <article class="insight-card card">
+        <div class="insight-header">
+          <div class="insight-icon purple-icon" aria-hidden="true">
+            <i class="ti ti-headset"></i>
+          </div>
+          <div>
+            <h3 class="insight-title">Support Tickets as an Early Warning</h3>
+            <p class="insight-desc">
+              Customers who raise 3+ support tickets in 6 months have a 58% churn
+              probability. Each unresolved ticket increases churn risk by an
+              estimated 8 percentage points.
+            </p>
+          </div>
+        </div>
+        <div class="insight-stat">
+          <span class="insight-stat-num" style="color:var(--purple);">+8pp</span>
+          <span class="insight-stat-label">churn risk per unresolved support ticket</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- =========================================================
+       ML PIPELINE
+  ========================================================== -->
+  <section id="pipeline" class="section" aria-labelledby="pipeline-heading">
+    <p class="section-eyebrow">Technical Architecture</p>
+    <h2 id="pipeline-heading" class="section-title">ML Pipeline</h2>
+    <p class="section-sub">
+      A production-grade machine learning pipeline from raw data ingestion
+      to real-time churn scoring.
+    </p>
+
+    <div class="pipeline-wrap">
+      <!-- Step list -->
+      <nav class="pipeline-steps" aria-label="Pipeline steps">
+        <button class="pipeline-step done"   data-step="0" onclick="showPipelineStep(0)">
+          <div class="step-dot"><i class="ti ti-database" aria-hidden="true"></i></div>
+          <div class="step-body">
+            <span class="step-title">Data Ingestion</span>
+            <span class="step-desc">ETL from CRM, billing, support systems</span>
+          </div>
+        </button>
+        <button class="pipeline-step done"   data-step="1" onclick="showPipelineStep(1)">
+          <div class="step-dot"><i class="ti ti-filter" aria-hidden="true"></i></div>
+          <div class="step-body">
+            <span class="step-title">Feature Engineering</span>
+            <span class="step-desc">38 derived features from raw signals</span>
+          </div>
+        </button>
+        <button class="pipeline-step active" data-step="2" onclick="showPipelineStep(2)">
+          <div class="step-dot"><i class="ti ti-brain" aria-hidden="true"></i></div>
+          <div class="step-body">
+            <span class="step-title">Model Training</span>
+            <span class="step-desc">XGBoost + Random Forest ensemble</span>
+          </div>
+        </button>
+        <button class="pipeline-step"        data-step="3" onclick="showPipelineStep(3)">
+          <div class="step-dot"><i class="ti ti-test-pipe" aria-hidden="true"></i></div>
+          <div class="step-body">
+            <span class="step-title">Evaluation &amp; SHAP</span>
+            <span class="step-desc">AUC-ROC, precision-recall, explainability</span>
+          </div>
+        </button>
+        <button class="pipeline-step"        data-step="4" onclick="showPipelineStep(4)">
+          <div class="step-dot"><i class="ti ti-rocket" aria-hidden="true"></i></div>
+          <div class="step-body">
+            <span class="step-title">Deployment &amp; API</span>
+            <span class="step-desc">FastAPI + Docker + real-time scoring</span>
+          </div>
+        </button>
+      </nav>
+
+      <!-- Detail panel -->
+      <div class="pipeline-detail card" id="pipeline_detail">
+        <h3 class="pipeline-detail-title" id="pd_title">Model Training — XGBoost Ensemble</h3>
+        <p  class="pipeline-detail-sub"   id="pd_sub">
+          Gradient boosted trees with cross-validation and hyperparameter tuning via Optuna
+        </p>
+        <pre class="code-block" id="pd_code" aria-label="Code example"><code></code></pre>
+        <div class="pipeline-metrics" aria-label="Model metrics">
+          <div class="pipe-metric"><div class="pipe-metric-num accent-text">94.2%</div><div class="pipe-metric-label">AUC-ROC</div></div>
+          <div class="pipe-metric"><div class="pipe-metric-num green-text">91.6%</div><div class="pipe-metric-label">Precision</div></div>
+          <div class="pipe-metric"><div class="pipe-metric-num purple-text">88.3%</div><div class="pipe-metric-label">Recall</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- =========================================================
+       CUSTOMER TABLE
+  ========================================================== -->
+  <section id="customers" class="section" aria-labelledby="customers-heading">
+    <p class="section-eyebrow">Customer Intelligence</p>
+    <h2 id="customers-heading" class="section-title">Customer Risk Table</h2>
+    <p class="section-sub">
+      Browse and search all customer profiles with live churn scores and
+      recommended interventions.
+    </p>
+
+    <div class="table-wrap card">
+      <div class="table-header">
+        <h3 class="table-heading">
+          All Customers
+          <span class="table-count">· 18,420 records</span>
+        </h3>
+        <div class="table-controls">
+          <div class="search-box" role="search">
+            <i class="ti ti-search" aria-hidden="true"></i>
+            <input type="text" id="tableSearch" placeholder="Search customers…"
+                   aria-label="Search customers" oninput="filterTable()" />
+          </div>
+          <div class="filter-group" role="group" aria-label="Filter by risk level">
+            <button class="filter-btn active-filter" id="filter_all"    onclick="filterRisk('all')">All</button>
+            <button class="filter-btn" id="filter_high"   onclick="filterRisk('high')">
+              <span style="color:var(--red);">●</span> High
+            </button>
+            <button class="filter-btn" id="filter_medium" onclick="filterRisk('medium')">
+              <span style="color:var(--amber);">●</span> Medium
+            </button>
+            <button class="filter-btn" id="filter_low"    onclick="filterRisk('low')">
+              <span style="color:var(--green);">●</span> Low
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-scroll" role="region" aria-label="Customer table" tabindex="0">
+        <table aria-label="Customer churn risk table">
+          <thead>
+            <tr>
+              <th scope="col">Customer</th>
+              <th scope="col">Tenure</th>
+              <th scope="col">Monthly $</th>
+              <th scope="col">Contract</th>
+              <th scope="col">Churn Risk</th>
+              <th scope="col">Risk Level</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody id="customer_table_body">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- =========================================================
+       TECH STACK
+  ========================================================== -->
+  <section class="section" aria-labelledby="tech-heading">
+    <p class="section-eyebrow">Built With</p>
+    <h2 id="tech-heading" class="section-title">Technology Stack</h2>
+    <p class="section-sub">Production-ready tooling from data science to deployment.</p>
+
+    <div class="tech-grid">
+      <div class="tech-card card"><div class="tech-icon">🐍</div><div class="tech-name">Python 3.11</div><div class="tech-desc">Core ML pipeline language</div></div>
+      <div class="tech-card card"><div class="tech-icon">⚡</div><div class="tech-name">XGBoost + RF</div><div class="tech-desc">Ensemble gradient boosting</div></div>
+      <div class="tech-card card"><div class="tech-icon">🔍</div><div class="tech-name">SHAP</div><div class="tech-desc">Model explainability layer</div></div>
+      <div class="tech-card card"><div class="tech-icon">🚀</div><div class="tech-name">FastAPI</div><div class="tech-desc">Real-time prediction API</div></div>
+      <div class="tech-card card"><div class="tech-icon">🐳</div><div class="tech-name">Docker</div><div class="tech-desc">Containerised deployment</div></div>
+      <div class="tech-card card"><div class="tech-icon">📊</div><div class="tech-name">Pandas / NumPy</div><div class="tech-desc">Feature engineering</div></div>
+      <div class="tech-card card"><div class="tech-icon">🧪</div><div class="tech-name">Scikit-learn</div><div class="tech-desc">Preprocessing &amp; evaluation</div></div>
+      <div class="tech-card card"><div class="tech-icon">☁️</div><div class="tech-name">AWS / GCP</div><div class="tech-desc">Cloud infrastructure</div></div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       CTA BANNER
+  ========================================================== -->
+  <section class="section cta-outer" aria-labelledby="cta-heading">
+    <div class="cta-section card">
+      <h2 id="cta-heading" class="cta-title">Liked What You Saw?</h2>
+      <p class="cta-sub">
+        I'm available for data science and ML engineering roles.
+        Let's build something impactful together.
+      </p>
+      <div class="cta-btns">
+        <button class="btn btn-primary">
+          <i class="ti ti-mail" aria-hidden="true"></i> Contact Me
+        </button>
+        <button class="btn btn-secondary">
+          <i class="ti ti-brand-github" aria-hidden="true"></i> View on GitHub
+        </button>
+        <button class="btn btn-secondary">
+          <i class="ti ti-file-cv" aria-hidden="true"></i> Download Resume
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       FOOTER
+  ========================================================== -->
+  <footer role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <div class="logo-dot logo-sm" aria-hidden="true">
+          <i class="ti ti-activity"></i>
+        </div>
+        ChurnGuard
+      </div>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="#overview">Overview</a>
+        <a href="#predictor">Predict</a>
+        <a href="#analytics">Analytics</a>
+        <a href="#pipeline">Pipeline</a>
+      </nav>
+      <p class="footer-copy">Built for portfolio · ML Demo Project</p>
+    </div>
+  </footer>
+
+  <!-- Project JS -->
+  <script src="js/data.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/predictor.js"></script>
+  <script src="js/pipeline.js"></script>
+  <script src="js/table.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
